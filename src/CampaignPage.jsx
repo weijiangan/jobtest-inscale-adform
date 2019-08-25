@@ -65,18 +65,24 @@ function CampaignPage(props) {
       <div className={styles.mt4}>
         <CampaignTable pageItems={pageItems} />
         <div className={styles.bar}>
-          <button onClick={() => setPage(p => p - 1)}>Prev</button>
+          <button onClick={() => setPage(p => (p <= 2 ? 1 : p - 1))}>
+            Prev
+          </button>
           <div>
             Page{" "}
             <input
               type="number"
               value={page}
               style={{ width: "2rem" }}
+              min={1}
+              max={pages}
               onChange={e => setPage(e.target.value)}
             />{" "}
             of {pages}
           </div>
-          <button onClick={() => setPage(p => p + 1)}>Next</button>
+          <button onClick={() => setPage(p => (p < pages ? p + 1 : pages))}>
+            Next
+          </button>
         </div>
       </div>
     </div>

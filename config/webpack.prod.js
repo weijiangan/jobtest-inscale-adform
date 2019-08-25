@@ -1,19 +1,18 @@
 const path = require("path");
 const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  mode: "development",
-  devtool: "cheap-module-source-map",
-  entry: ["webpack-hot-middleware/client", "./src/index.js"],
+  mode: "production",
+  devtool: "source-map",
+  entry: "./src/index.js",
   resolve: {
-    extensions: [".mjs", ".js", ".jsx"],
-    alias: {
-      "react-dom": "@hot-loader/react-dom"
-    }
+    extensions: [".mjs", ".js", ".jsx"]
   },
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "..", "dist"),
     publicPath: "/"
   },
   module: {
@@ -25,7 +24,6 @@ module.exports = {
             test: /\.jsx?$/,
             loader: "babel-loader",
             options: {
-              compact: true,
               cacheDirectory: true,
               babelrc: false,
               plugins: [
@@ -36,14 +34,7 @@ module.exports = {
                 [
                   "@babel/preset-env",
                   {
-                    targets: {
-                      browsers: [
-                        "last 2 Chrome versions",
-                        "not Chrome < 60",
-                        "last 2 Safari versions",
-                        "not Safari < 10.1"
-                      ]
-                    },
+                    targets: ">0.25%",
                     modules: false
                   }
                 ],
@@ -54,7 +45,7 @@ module.exports = {
           {
             test: /\.css$/,
             use: [
-              { loader: "style-loader" },
+              { loader: MiniCssExtractPlugin.loader },
               {
                 loader: "css-loader",
                 options: { modules: true, importLoaders: 1 }
@@ -85,14 +76,19 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify("development"),
-      "process.env.BABEL_ENV": JSON.stringify("development")
+      "process.env.NODE_ENV": JSON.stringify("production"),
+      "process.env.BABEL_ENV": JSON.stringify("production")
     }),
-    new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
-  ],
-  performance: {
-    hints: false
-  }
+    new webpack.NoEmitOnErrorsPlugin(),
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // all options are optional
+      filename: "[name].[hash].css",
+      chunkFilename: "[id].css",
+      ignoreOrder: false // Enable to remove warnings about conflicting order
+    }),
+    new HtmlWebpackPlugin({
+      template: "src/index.html"
+    })
+  ]
 };
