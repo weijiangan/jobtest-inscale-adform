@@ -46,6 +46,7 @@ function CampaignPage(props) {
       if (start && end) {
         res =
           res &&
+          !dEnd.isBefore(dStart, "day") &&
           (dateInRange(dStart, dEnd, cmp.startDate) ||
             dateInRange(dStart, dEnd, cmp.endDate));
       }
