@@ -79,7 +79,6 @@ function CampaignPage(props) {
                 selectedDays: [start, { start, end }],
                 disabledDays: { after: end },
                 toMonth: end,
-                modifiers: dateRange,
                 onDayClick: () => toRef.current.getInput().focus()
               }}
               onDayChange={date => setRange(s => ({ ...s, start: date }))}
@@ -97,7 +96,6 @@ function CampaignPage(props) {
               dayPickerProps={{
                 selectedDays: [start, { start, end }],
                 disabledDays: { before: start },
-                modifiers: dateRange,
                 month: start,
                 fromMonth: start
               }}
