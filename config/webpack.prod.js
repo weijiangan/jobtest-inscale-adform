@@ -44,6 +44,7 @@ module.exports = {
           },
           {
             test: /\.css$/,
+            include: [path.resolve(__dirname, "..", "src")],
             use: [
               { loader: MiniCssExtractPlugin.loader },
               {
@@ -58,6 +59,11 @@ module.exports = {
                 }
               }
             ]
+          },
+          {
+            test: /\.css$/,
+            exclude: [path.resolve(__dirname, "..", "src")],
+            use: [MiniCssExtractPlugin.loader, "css-loader"]
           },
           {
             loader: "file-loader",

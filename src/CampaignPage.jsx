@@ -7,7 +7,7 @@ import { usePagination } from "./usePagination";
 import { dateInRange, parseDate, formatDate } from "./utils";
 import dayjs from "dayjs";
 
-import "!style-loader!css-loader!react-day-picker/lib/style.css";
+import "react-day-picker/lib/style.css";
 import styles from "./app.css";
 
 const dateFormat = "DD/MM/YYYY";

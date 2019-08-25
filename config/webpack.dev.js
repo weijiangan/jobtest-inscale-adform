@@ -54,6 +54,7 @@ module.exports = {
           },
           {
             test: /\.css$/,
+            include: [path.resolve(__dirname, "..", "src")],
             use: [
               { loader: "style-loader" },
               {
@@ -68,6 +69,11 @@ module.exports = {
                 }
               }
             ]
+          },
+          {
+            test: /\.css$/,
+            exclude: [path.resolve(__dirname, "..", "src")],
+            use: ["style-loader", "css-loader"]
           },
           {
             loader: "file-loader",
