@@ -10,6 +10,8 @@ import dayjs from "dayjs";
 import "!style-loader!css-loader!react-day-picker/lib/style.css";
 import styles from "./app.css";
 
+const dateFormat = "DD/MM/YYYY";
+
 function CampaignPage(props) {
   const [campaigns, setCampaigns] = useState([]);
   const [filter, setFilter] = useState("");
@@ -68,8 +70,8 @@ function CampaignPage(props) {
             <label>Start date</label>
             <DayPickerInput
               value={start}
-              placeholder="DD/MM/YYYY"
-              format="DD/MM/YYYY"
+              placeholder={dateFormat}
+              format={dateFormat}
               formatDate={formatDate}
               parseDate={parseDate}
               dayPickerProps={{
@@ -87,8 +89,8 @@ function CampaignPage(props) {
             <DayPickerInput
               ref={toRef}
               value={end}
-              placeholder="DD/MM/YYYY"
-              format="DD/MM/YYYY"
+              placeholder={dateFormat}
+              format={dateFormat}
               formatDate={formatDate}
               parseDate={parseDate}
               dayPickerProps={{
@@ -151,8 +153,8 @@ function CampaignTable(props) {
   const rows = props.pageItems.map((cmp, index) => (
     <tr key={index}>
       <td>{cmp.name}</td>
-      <td>{cmp.startDate.format("DD/MM/YYYY")}</td>
-      <td>{cmp.endDate.format("DD/MM/YYYY")}</td>
+      <td>{cmp.startDate.format(dateFormat)}</td>
+      <td>{cmp.endDate.format(dateFormat)}</td>
       <td>
         <Circle
           className={styles.mr1}
