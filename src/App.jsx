@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { hot } from "react-hot-loader/root";
+import CampaignPage from "./CampaignPage";
+
+import "normalize.css";
 
 function App() {
-  return <h1>Hello World</h1>;
+  return <CampaignPage />;
 }
 
 export default hot(App);
