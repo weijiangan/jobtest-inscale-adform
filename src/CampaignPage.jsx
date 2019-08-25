@@ -1,14 +1,21 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useRef } from "react";
 import numeral from "numeral";
 import querystring from "querystring";
+import DayPickerInput from "react-day-picker/DayPickerInput";
 import { Campaign } from "./campaign";
 import { usePagination } from "./usePagination";
+import { dateInRange, parseDate, formatDate } from "./utils";
+import dayjs from "dayjs";
+
+import "!style-loader!css-loader!react-day-picker/lib/style.css";
 import styles from "./app.css";
 
 function CampaignPage(props) {
   const [campaigns, setCampaigns] = useState([]);
   const [filter, setFilter] = useState("");
+  const [dateRange, setRange] = useState({ start: undefined, end: undefined });
   const [page, setPage, paginator] = usePagination();
+  const { start, end } = dateRange;
 
   window.AddCampaigns = useCallback(
     input => {
@@ -30,14 +37,25 @@ function CampaignPage(props) {
   );
 
   const filterResults = useMemo(() => {
-    return campaigns.filter(cmp =>
-      cmp.name.toLowerCase().includes(filter.toLowerCase())
-    );
-  }, [campaigns, filter]);
+    const dStart = dayjs(start);
+    const dEnd = dayjs(end);
+    return campaigns.filter(cmp => {
+      let res = cmp.name.toLowerCase().includes(filter.toLowerCase());
+      if (start && end) {
+        res =
+          res &&
+          (dateInRange(dStart, dEnd, cmp.startDate) ||
+            dateInRange(dStart, dEnd, cmp.endDate));
+      }
+      return res;
+    });
+  }, [campaigns, filter, dateRange]);
 
   const [pageItems, pages] = useMemo(() => {
     return paginator(filterResults);
   }, [filterResults, page]);
+
+  const toRef = useRef();
 
   return (
     <div className={styles.container}>
@@ -48,11 +66,40 @@ function CampaignPage(props) {
         <div className={styles.bar}>
           <div className={styles.field}>
             <label>Start date</label>
-            <input type="date" />
+            <DayPickerInput
+              value={start}
+              placeholder="DD/MM/YYYY"
+              format="DD/MM/YYYY"
+              formatDate={formatDate}
+              parseDate={parseDate}
+              dayPickerProps={{
+                selectedDays: [start, { start, end }],
+                disabledDays: { after: end },
+                toMonth: end,
+                modifiers: dateRange,
+                onDayClick: () => toRef.current.getInput().focus()
+              }}
+              onDayChange={date => setRange(s => ({ ...s, start: date }))}
+            />
           </div>
           <div className={styles.field}>
             <label>End date</label>
-            <input type="date" />
+            <DayPickerInput
+              ref={toRef}
+              value={end}
+              placeholder="DD/MM/YYYY"
+              format="DD/MM/YYYY"
+              formatDate={formatDate}
+              parseDate={parseDate}
+              dayPickerProps={{
+                selectedDays: [start, { start, end }],
+                disabledDays: { before: start },
+                modifiers: dateRange,
+                month: start,
+                fromMonth: start
+              }}
+              onDayChange={date => setRange(s => ({ ...s, end: date }))}
+            />
           </div>
         </div>
         <div className={styles.field}>

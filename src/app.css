@@ -42,6 +42,7 @@ body {
   text-align: right;
 }
 
+input:not([type]),
 input[type="text"],
 input[type="number"],
 input[type="date"] {
