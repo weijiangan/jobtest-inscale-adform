@@ -92,6 +92,10 @@ input[type="date"]:focus:hover {
   margin-right: 1rem;
 }
 
+.mt2 {
+  margin-top: 1rem;
+}
+
 .mt4 {
   margin-top: 2rem;
 }
@@ -107,12 +111,15 @@ input[type="date"]:focus:hover {
 
 .bar {
   composes: flex;
-  margin-top: 1rem;
   float: right;
 }
 
 .bar > *:not(:last-child) {
   margin-right: 1rem;
+}
+
+.paginationBar {
+  composes: bar mt2;
 }
 
 button {

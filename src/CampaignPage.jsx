@@ -1,14 +1,14 @@
 import React, { useState, useCallback, useMemo } from "react";
 import numeral from "numeral";
+import querystring from "querystring";
 import { Campaign } from "./campaign";
+import { usePagination } from "./usePagination";
 import styles from "./app.css";
-
-const PAGE_SIZE = 10;
 
 function CampaignPage(props) {
   const [campaigns, setCampaigns] = useState([]);
   const [filter, setFilter] = useState("");
-  const [page, setPage] = useState(1);
+  const [page, setPage, paginator] = usePagination();
 
   window.AddCampaigns = useCallback(
     input => {
@@ -16,55 +16,58 @@ function CampaignPage(props) {
         cmp =>
           new Campaign(cmp.id, cmp.name, cmp.startDate, cmp.endDate, cmp.Budget)
       );
-      setCampaigns(x => x.concat(arr));
+      setCampaigns(s => s.concat(arr));
     },
     [setCampaigns]
   );
 
+  const handleSearch = useCallback(
+    event => {
+      setPage(1);
+      setFilter(event.target.value);
+    },
+    [setPage, setFilter]
+  );
+
   const filterResults = useMemo(() => {
-    setPage(1);
     return campaigns.filter(cmp =>
       cmp.name.toLowerCase().includes(filter.toLowerCase())
     );
   }, [campaigns, filter]);
 
-  const pageItems = useMemo(() => {
-    if (filterResults.length > PAGE_SIZE) {
-      return filterResults.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-    }
-    return filterResults;
+  const [pageItems, pages] = useMemo(() => {
+    return paginator(filterResults);
   }, [filterResults, page]);
-
-  const pages = Math.ceil(filterResults.length / PAGE_SIZE);
 
   return (
     <div className={styles.container}>
       <div className={styles.mt4}>
-        <div className={styles.spaceBetween}>
-          <div className={styles.bar}>
-            <div className={styles.field}>
-              <label>Start date</label>
-              <input type="date" />
-            </div>
-            <div className={styles.field}>
-              <label>End date</label>
-              <input type="date" />
-            </div>
+        <h1>Campaigns</h1>
+      </div>
+      <div className={styles.spaceBetween}>
+        <div className={styles.bar}>
+          <div className={styles.field}>
+            <label>Start date</label>
+            <input type="date" />
           </div>
           <div className={styles.field}>
-            <label>Filter</label>
-            <input
-              type="text"
-              value={filter}
-              placeholder="Campaign name..."
-              onChange={e => setFilter(e.target.value)}
-            />
+            <label>End date</label>
+            <input type="date" />
           </div>
+        </div>
+        <div className={styles.field}>
+          <label>Filter</label>
+          <input
+            type="text"
+            value={filter}
+            placeholder="campaign name..."
+            onChange={handleSearch}
+          />
         </div>
       </div>
       <div className={styles.mt4}>
         <CampaignTable pageItems={pageItems} />
-        <div className={styles.bar}>
+        <div className={styles.paginationBar}>
           <button onClick={() => setPage(p => (p <= 2 ? 1 : p - 1))}>
             Prev
           </button>
