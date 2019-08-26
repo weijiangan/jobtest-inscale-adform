@@ -4,7 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start:dev": "nodemon ./src/dev-server.js"
+    "start": "NODE_ENV=production node ./src/dev-server.js",
+    "start:dev": "nodemon ./src/dev-server.js",
+    "build": "webpack -p --config ./config/webpack.prod.js",
+    "test": "jest"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.18",
