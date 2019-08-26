@@ -7,7 +7,8 @@
           "node": "current"
         }
       }
-    ]
+    ],
+    "@babel/react"
   ],
   "plugins": ["babel-plugin-rewire"]
 }
