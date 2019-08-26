@@ -3,6 +3,7 @@ import numeral from "numeral";
 import querystring from "querystring";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import dayjs from "dayjs";
+import Ajv from "ajv";
 import { Campaign } from "./campaign";
 import { usePagination } from "./usePagination";
 import { dateInRange, parseDate, formatDate } from "./utils";
@@ -11,6 +12,27 @@ import "react-day-picker/lib/style.css";
 import styles from "./app.css";
 
 const dateFormat = "DD/MM/YYYY";
+const ajv = Ajv({ allErrors: true });
+const validateCampaigns = ajv.compile({
+  type: "array",
+  items: {
+    type: "object",
+    properties: {
+      id: { type: "integer" },
+      name: { type: "string" },
+      startDate: {
+        type: "string",
+        pattern: "^(1[0-2]|\\d)/(3[01]|[12]?\\d)/\\d{4}$"
+      },
+      endDate: {
+        type: "string",
+        pattern: "^(1[0-2]|\\d)/(3[01]|[12]?\\d)/\\d{4}$"
+      },
+      Budget: { type: "integer" }
+    },
+    required: ["id", "name", "startDate", "endDate", "Budget"]
+  }
+});
 
 function CampaignPage(props) {
   const [campaigns, setCampaigns] = useState([]);
@@ -21,9 +43,9 @@ function CampaignPage(props) {
 
   window.AddCampaigns = useCallback(
     input => {
-      if (!Campaign.validate(input)) {
+      if (!validateCampaigns(input)) {
         console.error(
-          "Invalid argument. Argument must be an array of campaigns."
+          "invalid argument: argument must be an array of valid campaigns."
         );
         return;
       }
