@@ -19,14 +19,16 @@ afterEach(() => {
   container = null;
 });
 
-test("AddCampaign function should exist in window", () => {
-  act(() => {
-    render(<CampaignPage />, container);
+describe("AddCampaigns", () => {
+  test("AddCampaigns function should exist in window", () => {
+    act(() => {
+      render(<CampaignPage />, container);
+    });
+    expect(window.AddCampaigns).toBeInstanceOf(Function);
   });
-  expect(window.AddCampaigns).toBeInstanceOf(Function);
 });
 
-describe("Campaigns", () => {
+describe("validateCampaigns", () => {
   test("validate valid input (array of 1 element)", () => {
     expect(
       validateCampaigns([
