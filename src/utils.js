@@ -15,7 +15,6 @@ function dateInRange(start, end, date) {
 
 function parseDate(str, format) {
   const parsed = dayjs(str, format);
-  console.log(parsed);
   if (parsed.isValid()) {
     return parsed.toDate();
   }
