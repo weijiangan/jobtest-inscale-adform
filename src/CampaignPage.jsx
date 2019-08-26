@@ -2,10 +2,10 @@ import React, { useState, useCallback, useMemo, useRef } from "react";
 import numeral from "numeral";
 import querystring from "querystring";
 import DayPickerInput from "react-day-picker/DayPickerInput";
+import dayjs from "dayjs";
 import { Campaign } from "./campaign";
 import { usePagination } from "./usePagination";
 import { dateInRange, parseDate, formatDate } from "./utils";
-import dayjs from "dayjs";
 
 import "react-day-picker/lib/style.css";
 import styles from "./app.css";
@@ -21,6 +21,12 @@ function CampaignPage(props) {
 
   window.AddCampaigns = useCallback(
     input => {
+      if (!Campaign.validate(input)) {
+        console.error(
+          "Invalid argument. Argument must be an array of campaigns."
+        );
+        return;
+      }
       const arr = input.map(
         cmp =>
           new Campaign(cmp.id, cmp.name, cmp.startDate, cmp.endDate, cmp.Budget)
