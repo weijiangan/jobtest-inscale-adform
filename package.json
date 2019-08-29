@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_ENV=production node ./src/dev-server.js",
-    "start:dev": "nodemon ./src/dev-server.js",
-    "build": "webpack -p --config ./config/webpack.prod.js",
+    "start": "static -p 3000 dist",
+    "start:dev": "nodemon src/dev-server.js",
+    "build": "webpack -p --config config/webpack.prod.js",
     "test": "jest"
   },
   "jest": {
@@ -58,6 +58,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.7.0",
     "mini-css-extract-plugin": "^0.8.0",
+    "node-static": "^0.7.11",
     "nodemon": "^1.19.1",
     "postcss-loader": "^3.0.0",
     "style-loader": "^1.0.0",
